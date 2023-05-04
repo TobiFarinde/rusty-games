@@ -1,13 +1,14 @@
-use crate::components::Collider;
-use crate::constants::{
-    BOTTOM_WALL, LEFT_WALL, RIGHT_WALL, TOP_WALL, WALL_COLOR, WALL_THICKNESS,
-};
 use bevy::{
     ecs::bundle::Bundle,
     math::Vec2,
     sprite::{Sprite, SpriteBundle},
     transform::components::Transform,
     utils::default,
+};
+
+use crate::components::Collider;
+use crate::constants::{
+    BOTTOM_WALL, LEFT_WALL, RIGHT_WALL, TOP_WALL, WALL_COLOR, WALL_THICKNESS,
 };
 
 // This bundle is a collection of the components that define a "wall" in our game
