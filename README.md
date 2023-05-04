@@ -1,6 +1,9 @@
 # Ing-Ong
 Simple ping pong game in rust
 
+## Demo
+
+![](ing-ong.gif)
 
 ## Prerequisites
 
