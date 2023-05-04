@@ -72,12 +72,6 @@ struct Collider;
 #[derive(Default)]
 struct CollisionEvent;
 
-#[derive(Component)]
-struct Brick;
-
-#[derive(Resource)]
-struct CollisionSound(Handle<AudioSource>);
-
 // This bundle is a collection of the components that define a "wall" in our game
 #[derive(Bundle)]
 struct WallBundle {
