@@ -3,7 +3,7 @@ Simple ping pong game in rust
 
 ## Demo
 
-![](ing-ong.gif)
+![](../examples/ing-ong.gif)
 
 ## Prerequisites
 

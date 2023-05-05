@@ -1739,13 +1739,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a257582fdcde896fd96463bf2d40eefea0580021c0712a0e2b028b60b47a837a"
 
 [[package]]
-name = "ing-ong"
-version = "0.1.0"
-dependencies = [
- "bevy",
-]
-
-[[package]]
 name = "inotify"
 version = "0.9.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2416,6 +2409,13 @@ dependencies = [
  "fdeflate",
  "flate2",
  "miniz_oxide 0.7.1",
+]
+
+[[package]]
+name = "pong"
+version = "0.1.0"
+dependencies = [
+ "bevy",
 ]
 
 [[package]]
