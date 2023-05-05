@@ -1,10 +1,7 @@
 pub mod constants;
 
 use bevy::{
-    ecs::{
-        component::Component,
-        bundle::Bundle,
-    },
+    ecs::{bundle::Bundle, component::Component},
     math::Vec2,
     sprite::{Sprite, SpriteBundle},
     transform::components::Transform,

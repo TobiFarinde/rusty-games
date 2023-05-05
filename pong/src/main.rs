@@ -6,7 +6,6 @@ use bevy::{
     sprite::collide_aabb::{collide, Collision},
     sprite::MaterialMesh2dBundle,
 };
-use shared::{WallBundle, WallLocation};
 use components::{Ball, Collider, CollisionEvent, Paddle, Velocity};
 use constants::{
     BACKGROUND_COLOR, BALL_COLOR, BALL_SIZE, BALL_SPEED,
@@ -14,6 +13,7 @@ use constants::{
     INITIAL_BALL_DIRECTION, LEFT_WALL, PADDLE_COLOR, PADDLE_PADDING,
     PADDLE_SIZE, PADDLE_SPEED, RIGHT_WALL, TIME_STEP, WALL_THICKNESS,
 };
+use shared::{WallBundle, WallLocation};
 
 fn main() {
     App::new()
