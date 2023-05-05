@@ -1,4 +1,3 @@
-mod bundles;
 mod components;
 mod constants;
 
@@ -7,7 +6,7 @@ use bevy::{
     sprite::collide_aabb::{collide, Collision},
     sprite::MaterialMesh2dBundle,
 };
-use bundles::wall_bundle::{WallBundle, WallLocation};
+use shared::{WallBundle, WallLocation};
 use components::{Ball, Collider, CollisionEvent, Paddle, Velocity};
 use constants::{
     BACKGROUND_COLOR, BALL_COLOR, BALL_SIZE, BALL_SPEED,

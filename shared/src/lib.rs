@@ -1,15 +1,22 @@
+pub mod constants;
+
 use bevy::{
-    ecs::bundle::Bundle,
+    ecs::{
+        component::Component,
+        bundle::Bundle,
+    },
     math::Vec2,
     sprite::{Sprite, SpriteBundle},
     transform::components::Transform,
     utils::default,
 };
 
-use crate::components::Collider;
-use crate::constants::{
+use constants::{
     BOTTOM_WALL, LEFT_WALL, RIGHT_WALL, TOP_WALL, WALL_COLOR, WALL_THICKNESS,
 };
+
+#[derive(Component)]
+pub struct Collider;
 
 // This bundle is a collection of the components that define a "wall" in our game
 #[derive(Bundle)]

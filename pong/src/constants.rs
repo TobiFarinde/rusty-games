@@ -25,9 +25,7 @@ pub const LEFT_WALL: f32 = -450.;
 pub const RIGHT_WALL: f32 = 450.;
 // y coordinates
 pub const BOTTOM_WALL: f32 = -300.;
-pub const TOP_WALL: f32 = 300.;
 
 pub const BACKGROUND_COLOR: Color = Color::rgb(0.9, 0.9, 0.9);
 pub const PADDLE_COLOR: Color = Color::rgb(0.3, 0.3, 0.7);
 pub const BALL_COLOR: Color = Color::rgb(1.0, 0.5, 0.5);
-pub const WALL_COLOR: Color = Color::rgb(0.8, 0.8, 0.8);
