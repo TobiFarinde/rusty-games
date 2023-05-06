@@ -8,7 +8,8 @@ pub const TIME_STEP: f32 = 1.0 / 60.0;
 
 // These constants are defined in `Transform` units.
 // Using the default 2D camera they correspond 1:1 with screen pixels.
-pub const SNAKE_SIZE: Vec3 = Vec3::new(120.0, 20.0, 0.0);
+pub const SNAKE_SIZE_VERTICAL: Vec3 = Vec3::new(6.0, 120.0, 0.0);
+pub const SNAKE_SIZE_HORIZONTAL: Vec3 = Vec3::new(120.0, 5.0, 0.0);
 pub const GAP_BETWEEN_SNAKE_AND_FLOOR: f32 = 60.0;
 pub const SNAKE_SPEED: f32 = 500.0;
 // How close can the paddle get to the wall
