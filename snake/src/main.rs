@@ -1,50 +1,40 @@
 mod components; mod constants;
 
-use bevy::{prelude::*, window::PrimaryWindow};
+use bevy::{prelude::*, window::{PrimaryWindow, WindowResolution}, render::camera::ScalingMode, math::Rect};
 use components::{SnakeHead, Size, Position};
 use constants::{
+    ARENA_WIDTH, 
+    ARENA_HEIGHT,
+    SNAKE_SEGMENT_COLOR,
     BACKGROUND_COLOR,
-    SNAKE_SIZE, ARENA_WIDTH, ARENA_HEIGHT,
-    SNAKE_HEAD_COLOR, SNAKE_SEGMENT_COLOR,
 };
 
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins.set(WindowPlugin {
-      window: WindowDescriptor { 
-        width: 140.0,
-        height:140.0,
-        title: "Game of Life".to_string(),
-        ..default()
-      },
-      ..default()
-    }))
+            primary_window: Some(Window {
+                title: "Snake Game".to_string(),
+                resolution: WindowResolution::new(500., 500.),
+                resizable: false,
+                ime_enabled: true,
+                ..default()
+            }),
+            ..default()
+        }))
         .insert_resource(ClearColor(BACKGROUND_COLOR))
         .add_startup_system(setup)
+        .add_systems(
+            (position_translation, size_scaling)
+             .chain()
+             .in_base_set(CoreSet::PostUpdate)
+        )
         .add_system(move_snake)
-        .add_system(size_scaling)
-        .add_system(position_translation)
         .add_system(bevy::window::close_on_esc)
         .run();
 }
 
 fn setup(mut commands: Commands) {
     commands.spawn(Camera2dBundle::default());
-
-    commands.spawn((
-        SpriteBundle {
-            transform: Transform {
-                scale: SNAKE_SIZE,
-                ..default()
-            },
-            sprite: Sprite {
-                color: SNAKE_HEAD_COLOR,
-                ..default()
-            },
-            ..default()
-        },
-        SnakeHead,
-    ));
 
     commands.spawn((
         SpriteBundle {
@@ -55,7 +45,7 @@ fn setup(mut commands: Commands) {
             ..default()
         },
         SnakeHead,
-        Position {x: 3, y: 3 },
+        Position {x: 0, y: 0 },
         Size::square(0.8)
     ));
 }
@@ -91,11 +81,12 @@ fn size_scaling(
 ) {
     let window = window.single();
 
+
     for (mut transform, sprite_size) in &mut query {
         transform.scale = Vec3::new(
             sprite_size.width / ARENA_WIDTH as f32 * window.width() as f32,
             sprite_size.height / ARENA_HEIGHT as f32 * window.height() as f32,
-            1.0,
+            0.0,
         );
     }
 }
