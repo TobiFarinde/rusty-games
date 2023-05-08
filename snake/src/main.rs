@@ -1,6 +1,6 @@
 mod components; mod constants;
 
-use bevy::{prelude::*, window::{PrimaryWindow, WindowResolution}, render::camera::ScalingMode, math::Rect};
+use bevy::{prelude::*, window::{PrimaryWindow, WindowResolution, PresentMode}, render::camera::ScalingMode, math::Rect};
 use components::{SnakeHead, Size, Position};
 use constants::{
     ARENA_WIDTH, 
@@ -16,7 +16,7 @@ fn main() {
                 title: "Snake Game".to_string(),
                 resolution: WindowResolution::new(500., 500.),
                 resizable: false,
-                ime_enabled: true,
+                present_mode: PresentMode::AutoVsync, 
                 ..default()
             }),
             ..default()
@@ -45,7 +45,7 @@ fn setup(mut commands: Commands) {
             ..default()
         },
         SnakeHead,
-        Position {x: 0, y: 0 },
+        Position {x: 5, y: 5 },
         Size::square(0.8)
     ));
 }
@@ -71,6 +71,16 @@ fn move_snake(
         if keyboard_input.pressed(KeyCode::Down) {
             pos.y -= 1;
         }
+
+        if pos.x < 0
+            || pos.y < 0
+            || pos.x as u32 >= ARENA_WIDTH
+            || pos.y as u32 >= ARENA_HEIGHT 
+            {
+                pos.x = 0;
+                pos.y = 0;
+
+            }
     }
 
 }
