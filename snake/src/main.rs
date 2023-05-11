@@ -1,12 +1,15 @@
-mod components; mod constants;
+mod components;
+mod constants;
 
-use bevy::{prelude::*, window::{PrimaryWindow, WindowResolution, PresentMode}, render::camera::ScalingMode, math::Rect};
-use components::{SnakeHead, Size, Position};
+use bevy::time::common_conditions::on_timer;
+use bevy::utils::Duration;
+use bevy::{
+    prelude::*,
+    window::{PresentMode, PrimaryWindow, WindowResolution},
+};
+use components::{Direction, Position, Size, SnakeHead};
 use constants::{
-    ARENA_WIDTH, 
-    ARENA_HEIGHT,
-    SNAKE_SEGMENT_COLOR,
-    BACKGROUND_COLOR,
+    ARENA_HEIGHT, ARENA_WIDTH, BACKGROUND_COLOR, SNAKE_SEGMENT_COLOR,
 };
 
 fn main() {
@@ -15,20 +18,23 @@ fn main() {
             primary_window: Some(Window {
                 title: "Snake Game".to_string(),
                 resolution: WindowResolution::new(500., 500.),
-                resizable: false,
-                present_mode: PresentMode::AutoVsync, 
+                present_mode: PresentMode::AutoVsync,
                 ..default()
             }),
             ..default()
         }))
+        .insert_resource(FixedTime::new_from_secs(0.150))
         .insert_resource(ClearColor(BACKGROUND_COLOR))
         .add_startup_system(setup)
+        .add_system(snake_movement_input.before(snake_movement))
         .add_systems(
             (position_translation, size_scaling)
-             .chain()
-             .in_base_set(CoreSet::PostUpdate)
+                .chain()
+                .in_base_set(CoreSet::PostUpdate),
         )
-        .add_system(move_snake)
+        .add_system(
+            snake_movement.run_if(on_timer(Duration::from_secs_f32(0.150))),
+        )
         .add_system(bevy::window::close_on_esc)
         .run();
 }
@@ -44,45 +50,65 @@ fn setup(mut commands: Commands) {
             },
             ..default()
         },
-        SnakeHead,
-        Position {x: 5, y: 5 },
-        Size::square(0.8)
+        SnakeHead {
+            direction: Direction::Up,
+        },
+        Position { x: 3, y: 3 },
+        Size::square(0.8),
     ));
 }
 
-fn move_snake(
-    keyboard_input: Res<Input<KeyCode>>,
-    mut query: Query<&mut Position, With<SnakeHead>>,
+fn snake_movement(
+    mut heads: Query<(Entity, &SnakeHead)>,
+    mut positions: Query<&mut Position>,
 ) {
-
-    for mut pos in query.iter_mut() {
-        if keyboard_input.pressed(KeyCode::Left) {
-            pos.x -= 1;
-        }
-
-        if keyboard_input.pressed(KeyCode::Right) {
-            pos.x += 1;
-        }
-
-        if keyboard_input.pressed(KeyCode::Up) {
-            pos.y += 1;
-        }
-
-        if keyboard_input.pressed(KeyCode::Down) {
-            pos.y -= 1;
-        }
-
-        if pos.x < 0
-            || pos.y < 0
-            || pos.x as u32 >= ARENA_WIDTH
-            || pos.y as u32 >= ARENA_HEIGHT 
-            {
-                pos.x = 0;
-                pos.y = 0;
-
+    if let Some((head_entity, head)) = heads.iter_mut().next() {
+        let mut head_pos = positions.get_mut(head_entity).unwrap();
+        match &head.direction {
+            Direction::Left => {
+                head_pos.x -= 1;
             }
+            Direction::Right => {
+                head_pos.x += 1;
+            }
+            Direction::Up => {
+                head_pos.y += 1;
+            }
+            Direction::Down => {
+                head_pos.y -= 1;
+            }
+        };
+        if head_pos.x < 0
+            || head_pos.y < 0
+            || head_pos.x as u32 >= ARENA_WIDTH
+            || head_pos.y as u32 >= ARENA_HEIGHT
+        {
+            head_pos.x = 3;
+            head_pos.y = 3;
+        }
     }
+}
 
+fn snake_movement_input(
+    keyboard_input: Res<Input<KeyCode>>,
+    mut heads: Query<&mut SnakeHead>,
+) {
+    if let Some(mut head) = heads.iter_mut().next() {
+        let dir: Direction = if keyboard_input.pressed(KeyCode::Left) {
+            Direction::Left
+        } else if keyboard_input.pressed(KeyCode::Down) {
+            Direction::Down
+        } else if keyboard_input.pressed(KeyCode::Up) {
+            Direction::Up
+        } else if keyboard_input.pressed(KeyCode::Right) {
+            Direction::Right
+        } else {
+            head.direction
+        };
+        if dir != head.direction.opposite() {
+            head.direction = dir;
+        }
+    }
 }
 
 fn size_scaling(
@@ -90,7 +116,6 @@ fn size_scaling(
     mut query: Query<(&mut Transform, &Size)>,
 ) {
     let window = window.single();
-
 
     for (mut transform, sprite_size) in &mut query {
         transform.scale = Vec3::new(
